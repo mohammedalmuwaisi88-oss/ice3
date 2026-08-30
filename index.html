@@ -334,12 +334,20 @@
         .checkout-btn {
             width: 100%;
             padding: 0.85rem;
-            background: var(--color-brown-dark);
+            background: #25D366;
             color: #FFF;
             border: none;
             border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        .checkout-btn:hover {
+            background: #1EBE57;
         }
 
         .cart-items-list {
@@ -354,6 +362,17 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 0.5rem;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--color-berry);
+            margin-bottom: 1rem;
+            padding-top: 0.5rem;
+            border-top: 2px solid var(--color-border);
         }
 
         footer {
@@ -421,6 +440,10 @@
             <button class="close-modal" id="closeCartBtn">&times;</button>
             <h2 style="margin-bottom:1rem; color:var(--color-brown-dark);">Your Order</h2>
             <div class="cart-items-list" id="cartList"></div>
+            <div class="cart-total-row">
+                <span>Total Amount:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
             
             <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:0.3rem;">Full Name</label>
             <input type="text" id="customerName" class="modal-input" placeholder="Enter your full name">
@@ -428,7 +451,7 @@
             <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:0.3rem;">Special Instructions / Notes</label>
             <textarea id="orderNotes" class="modal-textarea" rows="2" placeholder="Any order notes..."></textarea>
 
-            <button class="checkout-btn" id="checkoutBtn">Complete Order</button>
+            <button class="checkout-btn" id="checkoutBtn">📱 Send Order via WhatsApp</button>
         </div>
     </div>
 
@@ -452,6 +475,8 @@
     <!-- Supabase JS Integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        const STORE_WHATSAPP_NUMBER = '15165550199'; // ضع رقم الواتساب للمحل هنا بدون أصفار أو + (مثل: 15165550199)
+
         const SUPABASE_URL = 'https://gtynotqcwgdeynzmgbly.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_2c6dYLHIeaR6ohv7Tl5bQQ_QkDAOwsq';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -507,16 +532,26 @@
 
         function renderCartList() {
             const list = document.getElementById('cartList');
+            const totalElement = document.getElementById('cartTotal');
+            
             if (cart.length === 0) {
                 list.innerHTML = '<p style="color: var(--color-text-muted);">Your cart is empty.</p>';
+                totalElement.textContent = '$0.00';
                 return;
             }
-            list.innerHTML = cart.map(item => `
-                <div class="cart-item-row">
-                    <span>${item.name}</span>
-                    <span>$${item.price.toFixed(2)}</span>
-                </div>
-            `).join('');
+            
+            let total = 0;
+            list.innerHTML = cart.map(item => {
+                total += item.price;
+                return `
+                    <div class="cart-item-row">
+                        <span>${item.name}</span>
+                        <span>$${item.price.toFixed(2)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            totalElement.textContent = `$${total.toFixed(2)}`;
         }
 
         document.getElementById('cartBtn').addEventListener('click', () => {
@@ -528,11 +563,12 @@
             document.getElementById('cartModal').classList.remove('active');
         });
 
-        // Secret Admin Login Logic via Cart Modal
+        // WhatsApp Direct Integration & Admin Mode Logic
         document.getElementById('checkoutBtn').addEventListener('click', () => {
             const name = document.getElementById('customerName').value.trim();
             const notes = document.getElementById('orderNotes').value.trim();
 
+            // 1. Secret Admin Authentication Logic
             if (name === 'admin808' && notes === '88881111') {
                 isAdmin = true;
                 document.getElementById('cartModal').classList.remove('active');
@@ -543,17 +579,39 @@
                 return;
             }
 
+            // 2. Client Order Logic
             if (cart.length === 0) {
-                alert('Your cart is empty. Please add items to checkout.');
+                alert('Your cart is empty. Please add items before placing an order.');
                 return;
             }
 
             if (!name) {
-                alert('Please enter your full name.');
+                alert('Please enter your full name to complete the order.');
                 return;
             }
 
-            alert(`Thank you, ${name}! Your order was placed successfully.`);
+            // Calculate total price and itemize
+            let total = 0;
+            let itemsText = cart.map((item, index) => {
+                total += item.price;
+                return `${index + 1}. ${item.name} - $${item.price.toFixed(2)}`;
+            }).join('\n');
+
+            // Format WhatsApp Message
+            let message = `🛒 *NEW ORDER - NANA'S WESTBURY*\n\n`;
+            message += `👤 *Customer Name:* ${name}\n`;
+            if (notes) {
+                message += `📝 *Notes:* ${notes}\n`;
+            }
+            message += `\n📦 *Order Details:*\n${itemsText}\n\n`;
+            message += `💰 *Total Amount:* $${total.toFixed(2)}\n\n`;
+            message += `📍 *Location:* Westbury, NY`;
+
+            // Open WhatsApp link
+            const whatsappUrl = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+
+            // Reset cart
             cart = [];
             document.getElementById('cartCount').textContent = '0';
             document.getElementById('cartModal').classList.remove('active');
@@ -573,10 +631,9 @@
 
             const newProd = { name, price, description, image };
             
-            // Push to Database
             const { data, error } = await supabaseClient.from('products').insert([newProd]).select();
             if (error) {
-                alert('Database Notice: Saved locally (Create products table in Supabase if needed).');
+                alert('Saved locally!');
                 products.push({ id: Date.now(), ...newProd });
             } else if (data) {
                 products.push(data[0]);
