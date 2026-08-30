@@ -397,13 +397,13 @@
 </head>
 <body>
 
-    <div class="top-bar">✨ Visit our Westbury store or order online for local delivery!</div>
+    <div class="top-bar">✨ Visit our store or order online for local delivery!</div>
 
     <header>
         <div class="nav-container">
             <a href="#" class="logo">
                 NANA'S
-                <span>WESTBURY, NY</span>
+                <span>ARTISANAL DESSERTS</span>
             </a>
             <div class="nav-actions">
                 <div class="admin-badge-blue" id="adminBadge">⚡ ADMIN MODE</div>
@@ -413,7 +413,7 @@
     </header>
 
     <section class="hero-banner">
-        <span class="location-tag">📍 Westbury, New York</span>
+        <span class="location-tag">📍 Premium Desserts</span>
         <h1>Sweet Moments, Crafted at Nana's</h1>
         <p>Handcrafted artisanal ice cream, freshly made waffles, and gourmet desserts made daily with love.</p>
     </section>
@@ -459,11 +459,7 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <h4 style="color:#FFF;">NANA'S DESSERTS</h4>
-                <p>Bringing warmth, luxury, and premium hand-crafted sweets to New York.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Store Location</h4>
-                <p>123 Post Avenue<br>Westbury, NY 11590</p>
+                <p>Bringing warmth, luxury, and premium hand-crafted sweets to you.</p>
             </div>
             <div class="footer-col">
                 <h4>Opening Hours</h4>
@@ -475,7 +471,8 @@
     <!-- Supabase JS Integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const STORE_WHATSAPP_NUMBER = '15165550199'; // ضع رقم الواتساب للمحل هنا بدون أصفار أو + (مثل: 15165550199)
+        // Updated Store WhatsApp Number for Oman (+968)
+        const STORE_WHATSAPP_NUMBER = '96872420073';
 
         const SUPABASE_URL = 'https://gtynotqcwgdeynzmgbly.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_2c6dYLHIeaR6ohv7Tl5bQQ_QkDAOwsq';
@@ -598,16 +595,15 @@
             }).join('\n');
 
             // Format WhatsApp Message
-            let message = `🛒 *NEW ORDER - NANA'S WESTBURY*\n\n`;
+            let message = `🛒 *NEW ORDER - NANA'S DESSERTS*\n\n`;
             message += `👤 *Customer Name:* ${name}\n`;
             if (notes) {
                 message += `📝 *Notes:* ${notes}\n`;
             }
             message += `\n📦 *Order Details:*\n${itemsText}\n\n`;
-            message += `💰 *Total Amount:* $${total.toFixed(2)}\n\n`;
-            message += `📍 *Location:* Westbury, NY`;
+            message += `💰 *Total Amount:* $${total.toFixed(2)}`;
 
-            // Open WhatsApp link
+            // Open WhatsApp link with prefilled text
             const whatsappUrl = `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
 
