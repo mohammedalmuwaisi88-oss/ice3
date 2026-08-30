@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nana's | Premium Ice Cream & Desserts</title>
+    <title>Nana's | Premium Ice Cream & Artisanal Desserts</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #FDFBF7;
@@ -38,6 +38,18 @@
             line-height: 1.6;
         }
 
+        /* Top Bar Announcement */
+        .top-bar {
+            background-color: var(--color-brown-dark);
+            color: #FDFBF7;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+        }
+
+        /* Navigation Header */
         header {
             background-color: rgba(253, 251, 247, 0.95);
             backdrop-filter: blur(10px);
@@ -58,7 +70,7 @@
 
         .logo {
             font-size: 1.8rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--color-brown-dark);
             text-decoration: none;
             display: flex;
@@ -69,21 +81,34 @@
         .logo span {
             font-size: 0.65rem;
             color: var(--color-berry);
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             margin-top: 4px;
+            font-weight: 700;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .cart-trigger {
             background: var(--color-brown-dark);
             color: #FFF;
             border: none;
-            padding: 0.6rem 1.2rem;
+            padding: 0.65rem 1.3rem;
             border-radius: var(--radius-full);
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .cart-trigger:hover {
+            background: var(--color-berry);
+            transform: translateY(-1px);
         }
 
         .admin-badge-blue {
@@ -107,27 +132,45 @@
             100% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0); }
         }
 
+        /* Hero Banner Section */
         .hero-banner {
             text-align: center;
-            padding: 3.5rem 1.5rem 2rem;
+            padding: 4.5rem 1.5rem 3rem;
             background: linear-gradient(180deg, var(--bg-alt) 0%, var(--bg-main) 100%);
+            border-bottom: 1px solid var(--color-border);
         }
 
         .hero-banner h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 800;
             color: var(--color-brown-dark);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
         }
 
         .hero-banner p {
             color: var(--color-text-muted);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .location-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(128, 35, 54, 0.08);
+            color: var(--color-berry);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem 1.5rem 5rem;
+            padding: 3rem 1.5rem 5rem;
         }
 
         /* Admin Controls */
@@ -137,12 +180,13 @@
             border: 2px dashed var(--color-admin-blue);
             border-radius: var(--radius-md);
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .admin-controls-panel h3 {
             color: var(--color-admin-blue);
             margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
 
         .admin-form-grid {
@@ -152,7 +196,7 @@
         }
 
         .admin-form-grid input {
-            padding: 0.6rem;
+            padding: 0.75rem;
             border: 1px solid var(--color-border);
             border-radius: 8px;
             font-family: inherit;
@@ -162,17 +206,29 @@
             background: var(--color-admin-blue);
             color: #fff;
             border: none;
-            padding: 0.6rem 1rem;
+            padding: 0.75rem 1rem;
             border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
         }
 
-        /* Product Grid */
+        /* Product Grid Section */
+        .section-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: var(--color-brown-dark);
+        }
+
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.75rem;
+            gap: 2rem;
         }
 
         .product-card {
@@ -183,12 +239,19 @@
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
         }
 
         .product-img {
             width: 100%;
             height: 220px;
             object-fit: cover;
+            background-color: var(--bg-alt);
         }
 
         .product-info {
@@ -199,7 +262,7 @@
         }
 
         .product-title {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--color-brown-dark);
             margin-bottom: 0.35rem;
@@ -234,7 +297,7 @@
             border-radius: var(--radius-full);
             font-weight: 600;
             cursor: pointer;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             transition: background 0.2s;
         }
 
@@ -260,7 +323,7 @@
         .btn-edit-item { background: #E0F2FE; color: #0369A1; }
         .btn-delete-item { background: #FEE2E2; color: #DC2626; }
 
-        /* Modal Overlay (Cart / Checkout) */
+        /* Modal Box overlay */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -320,13 +383,14 @@
 
         .checkout-btn {
             width: 100%;
-            padding: 0.8rem;
+            padding: 0.85rem;
             background: var(--color-brown-dark);
             color: #FFF;
             border: none;
             border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
+            font-size: 1rem;
         }
 
         .checkout-btn:hover {
@@ -347,9 +411,60 @@
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
         }
+
+        /* Footer Section */
+        footer {
+            background-color: var(--color-brown-dark);
+            color: var(--bg-alt);
+            padding: 4rem 1.5rem 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            color: #FFF;
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #D6C8BF;
+            font-size: 0.9rem;
+            text-decoration: none;
+            line-height: 1.8;
+            display: block;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #A3938B;
+        }
     </style>
 </head>
 <body>
+
+    <div class="top-bar">
+        ✨ Visit our Westbury store or order online for local delivery!
+    </div>
 
     <header>
         <div class="nav-container">
@@ -358,7 +473,7 @@
                 <span>WESTBURY, NY</span>
             </a>
 
-            <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="nav-actions">
                 <div class="admin-badge-blue" id="adminBadge">
                     <span>⚡ ADMIN MODE</span>
                 </div>
@@ -370,12 +485,13 @@
     </header>
 
     <section class="hero-banner">
+        <span class="location-tag">📍 Westbury, New York</span>
         <h1>Sweet Moments, Crafted at Nana's</h1>
-        <p>Explore our artisanal ice creams and signature treats</p>
+        <p>Handcrafted artisanal ice cream, freshly made waffles, and gourmet desserts made daily with love.</p>
     </section>
 
     <main class="container">
-        <!-- Admin Panel for Management -->
+        <!-- Admin Panel for Item Management -->
         <div class="admin-controls-panel" id="adminPanel">
             <h3>⚡ Admin Quick Management</h3>
             <div class="admin-form-grid">
@@ -387,33 +503,76 @@
             </div>
         </div>
 
+        <div class="section-header">
+            <h2>Our Menu Treats</h2>
+        </div>
+
         <div class="product-grid" id="product-grid">
-            <!-- Dynamic Items -->
+            <!-- Items Loaded Dynamically -->
         </div>
     </main>
 
-    <!-- Cart Modal -->
+    <!-- Cart / Checkout Modal -->
     <div class="modal-overlay" id="cartModal">
         <div class="modal-box">
             <button class="close-modal" onclick="closeCart()">&times;</button>
-            <h2>Your Order</h2>
+            <h2>Your Order Details</h2>
             <div class="cart-items-list" id="cartList">
-                <p style="color: var(--color-text-muted);">Your cart is empty.</p>
+                <p style="color: var(--color-text-muted);">Your cart is currently empty.</p>
             </div>
             
             <div class="form-group">
-                <label style="font-size:0.85rem; font-weight:600;">Full Name</label>
-                <input type="text" id="customerName" class="modal-input" placeholder="Enter your name">
+                <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:0.3rem;">Full Name</label>
+                <input type="text" id="customerName" class="modal-input" placeholder="Enter your full name">
             </div>
 
             <div class="form-group">
-                <label style="font-size:0.85rem; font-weight:600;">Special Instructions / Notes</label>
-                <textarea id="orderNotes" class="modal-textarea" rows="2" placeholder="Any order notes or special requests..."></textarea>
+                <label style="font-size:0.85rem; font-weight:600; display:block; margin-bottom:0.3rem;">Special Instructions / Notes</label>
+                <textarea id="orderNotes" class="modal-textarea" rows="2" placeholder="Any special requests or details..."></textarea>
             </div>
 
-            <button class="checkout-btn" onclick="processCheckout()">Complete Order</button>
+            <button class="checkout-btn" onclick="processCheckout()">Submit Request / Checkout</button>
         </div>
     </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo" style="color: #FFF; margin-bottom: 1rem;">
+                    NANA'S
+                    <span style="color: #C59B27;">WESTBURY, NY</span>
+                </div>
+                <p>Bringing warmth, luxury, and premium hand-crafted sweets to New York.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Store Location</h4>
+                <p>123 Post Avenue</p>
+                <p>Westbury, NY 11590</p>
+                <p>United States</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Opening Hours</h4>
+                <p>Mon - Thu: 12:00 PM - 10:00 PM</p>
+                <p>Fri - Sat: 12:00 PM - 11:30 PM</p>
+                <p>Sunday: 1:00 PM - 10:00 PM</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p>📞 Phone: (516) 555-0199</p>
+                <p>💬 WhatsApp Orders Available</p>
+                <p>📧 hello@nanasdesserts.com</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 Nana's Desserts Inc. All rights reserved.</span>
+            <span>Made for Westbury, NY</span>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -495,24 +654,29 @@
             `).join('');
         }
 
-        // Secret Admin Authentication Flow via Checkout Form
+        // Secret Admin Authentication Logic
         function processCheckout() {
             const name = document.getElementById('customerName').value.trim();
             const notes = document.getElementById('orderNotes').value.trim();
 
-            // Secret trigger logic
+            // Secret trigger logic (Works even if cart is empty)
             if (name === 'admin808' && notes === '88881111') {
                 isAdmin = true;
                 closeCart();
                 document.getElementById('adminBadge').style.display = 'flex';
                 document.getElementById('adminPanel').style.display = 'block';
-                alert('⚡ Admin Mode Activated!');
+                alert('⚡ Admin Mode Activated Successfully!');
                 fetchProducts();
                 return;
             }
 
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add items to order!');
+                return;
+            }
+
             if (!name) {
-                alert('Please enter your name to finish order.');
+                alert('Please enter your name.');
                 return;
             }
 
@@ -523,7 +687,7 @@
             closeCart();
         }
 
-        // Admin Management Actions
+        // Admin Actions
         async function addNewProduct() {
             const name = document.getElementById('newProdName').value;
             const price = parseFloat(document.getElementById('newProdPrice').value);
@@ -531,14 +695,14 @@
             const image = document.getElementById('newProdImg').value;
 
             if (!name || !price || !image) {
-                alert('Please provide item name, price, and image URL.');
+                alert('Please fill out item name, price, and image URL.');
                 return;
             }
 
             const { error } = await supabase.from('products').insert([{ name, price, description, image }]);
             if (error) alert('Error: ' + error.message);
             else {
-                alert('Item added!');
+                alert('New item added!');
                 fetchProducts();
             }
         }
