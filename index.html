@@ -6,16 +6,16 @@
     <title>Nana's | قائمة الحلويات والآيس كريم</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #FDFBF7;
             --bg-card: #FFFFFF;
             --bg-alt: #F7F3EC;
             --color-brown-dark: #2C1A14;
-            --color-brown-mid: #5C4033;
             --color-berry: #802336;
-            --color-gold: #C59B27;
+            --color-admin-blue: #0070F3;
+            --color-admin-bg: #EBF5FF;
             --color-text: #221C19;
             --color-text-muted: #665A54;
             --color-border: #E8DFD5;
@@ -34,11 +34,86 @@
         body {
             background-color: var(--bg-main);
             color: var(--color-text);
-            font-family: 'Cairo', 'Tajawal', sans-serif;
+            font-family: 'Cairo', sans-serif;
             line-height: 1.6;
             direction: rtl;
         }
 
+        /* نافذة طلب الاسم والرمز السري */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease, visibility 0.3s;
+        }
+
+        .modal-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .modal-box {
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid var(--color-border);
+        }
+
+        .modal-box h2 {
+            color: var(--color-brown-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .modal-box p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--color-brown-dark);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: var(--color-berry);
+        }
+
+        /* Header Navigation */
         header {
             background-color: rgba(253, 251, 247, 0.95);
             backdrop-filter: blur(10px);
@@ -74,37 +149,43 @@
             margin-top: 4px;
         }
 
-        .admin-badge {
-            background-color: var(--bg-alt);
-            border: 1px solid var(--color-border);
-            padding: 0.5rem 1rem;
+        /* شارة الأدمن الزرقاء المصممة بأناقة */
+        .admin-badge-blue {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--color-admin-bg);
+            color: var(--color-admin-blue);
+            border: 1px solid rgba(0, 112, 243, 0.3);
+            padding: 0.4rem 1.2rem;
             border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--color-brown-mid);
-            text-decoration: none;
-            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 0 12px rgba(0, 112, 243, 0.2);
+            animation: pulse 2s infinite;
         }
-        .admin-badge:hover {
-            background-color: var(--color-brown-dark);
-            color: #FFF;
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(0, 112, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0); }
+        }
+
+        .user-greeting {
+            font-weight: 600;
+            color: var(--color-brown-dark);
+            font-size: 0.95rem;
         }
 
         .hero-banner {
             text-align: center;
-            padding: 3.5rem 1.5rem 2rem;
+            padding: 3rem 1.5rem 1.5rem;
             background: linear-gradient(180deg, var(--bg-alt) 0%, var(--bg-main) 100%);
         }
 
         .hero-banner h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: var(--color-brown-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .hero-banner p {
-            color: var(--color-text-muted);
-            font-size: 1.1rem;
         }
 
         .container {
@@ -113,11 +194,49 @@
             padding: 2rem 1.5rem 5rem;
         }
 
+        /* لوحة إضافة المنتجات التي تظهر للأدمن فقط */
+        .admin-controls-panel {
+            display: none;
+            background: #FFFFFF;
+            border: 2px dashed var(--color-admin-blue);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-controls-panel h3 {
+            color: var(--color-admin-blue);
+            margin-bottom: 1rem;
+        }
+
+        .admin-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .admin-form-grid input {
+            padding: 0.6rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .btn-add-prod {
+            background: var(--color-admin-blue);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* المنتجات */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 1.75rem;
-            margin-top: 2rem;
         }
 
         .product-card {
@@ -126,21 +245,15 @@
             overflow: hidden;
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow-sm);
-            transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+            position: relative;
         }
 
         .product-img {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
-            background-color: var(--bg-alt);
         }
 
         .product-info {
@@ -151,16 +264,16 @@
         }
 
         .product-title {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--color-brown-dark);
             margin-bottom: 0.35rem;
         }
 
         .product-desc {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: var(--color-text-muted);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             flex-grow: 1;
         }
 
@@ -181,22 +294,45 @@
         .order-btn {
             background-color: var(--color-brown-dark);
             color: #FFF;
-            border: none;
-            padding: 0.5rem 1.25rem;
+            padding: 0.5rem 1rem;
             border-radius: var(--radius-full);
             font-weight: 600;
-            cursor: pointer;
             text-decoration: none;
-            font-size: 0.875rem;
-            transition: background 0.2s;
+            font-size: 0.85rem;
         }
 
-        .order-btn:hover {
-            background-color: var(--color-berry);
+        /* أزرار تعديل وحذف الأدمن على الكروت */
+        .admin-actions {
+            display: none;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
         }
+
+        .btn-edit-item, .btn-delete-item {
+            flex: 1;
+            padding: 0.4rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-edit-item { background: #E0F2FE; color: #0369A1; }
+        .btn-delete-item { background: #FEE2E2; color: #DC2626; }
     </style>
 </head>
 <body>
+
+    <!-- النافذة المنبثقة للأعضاء والمسؤولين -->
+    <div class="modal-overlay" id="nameModal">
+        <div class="modal-box" id="modalContent">
+            <h2>مرحباً بك في Nana's 👋</h2>
+            <p>يسعدنا زيارتك، ما هو اسمك الكريم؟</p>
+            <input type="text" id="usernameInput" class="modal-input" placeholder="أدخل اسمك هنا..." autofocus>
+            <button class="modal-btn" onclick="submitName()">دخول الموقع</button>
+        </div>
+    </div>
 
     <header>
         <div class="nav-container">
@@ -204,7 +340,14 @@
                 NANA'S
                 <span>WESTBURY, NY</span>
             </a>
-            <a href="admin.html" class="admin-badge">⚙️ لوحة التحكم (المدير)</a>
+            
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span class="user-greeting" id="userGreeting"></span>
+                <!-- شارة الأدمن الزرقاء -->
+                <div class="admin-badge-blue" id="adminBadge">
+                    <span>⚡ ADMIN MODE</span>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -214,26 +357,85 @@
     </section>
 
     <main class="container">
+        <!-- لوحة تحكم الأدمن لإضافة المنتجات فوراً -->
+        <div class="admin-controls-panel" id="adminPanel">
+            <h3>➕ إضافة صنف جديد (لوحة التحكم السريعة)</h3>
+            <div class="admin-form-grid">
+                <input type="text" id="newProdName" placeholder="اسم المنتج">
+                <input type="number" step="0.01" id="newProdPrice" placeholder="السعر ($)">
+                <input type="text" id="newProdDesc" placeholder="الوصف">
+                <input type="url" id="newProdImg" placeholder="رابط الصورة">
+                <button class="btn-add-prod" onclick="addNewProduct()">إضافة للموقع</button>
+            </div>
+        </div>
+
         <div class="product-grid" id="product-grid">
-            <!-- تحميل الأصناف من قاعدة البيانات -->
+            <!-- يتم تحميل المنتجات هنا -->
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ضع روابط مفاتيح Supabase الخاصة بك هنا
-        const SUPABASE_URL = 'https://gtynotqcwgdeynzmgbly.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_2c6dYLHIeaR6ohv7Tl5bQQ_QkDAOwsq';
-        
+        const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_ID.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let isAdmin = false;
+        let tempName = '';
 
         const DEFAULT_PRODUCTS = [
             { id: 1, name: 'حلم Strawberry', description: 'آيس كريم فراولة طازجة مع قطع الفاكهة والكريمة.', price: 8.50, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80' },
             { id: 2, name: 'سعادة Blueberry', description: 'حلويات التوت الأزرق الغنية بالكريمة اللذيذة.', price: 8.75, image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80' },
-            { id: 3, name: 'سحابة Vanilla Cloud', description: 'فانيليا فاخرة كلاسيكية بقوام كريمي ناعم.', price: 7.50, image: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=600&q=80' },
-            { id: 4, name: 'جنة الشوكولاتة', description: 'شوكولاتة داكنة غنية لعشاق الشوكولاتة الأصليين.', price: 8.25, image: 'https://images.unsplash.com/photo-1580915411954-282cb1b0d780?auto=format&fit=crop&w=600&q=80' }
+            { id: 3, name: 'سحابة Vanilla Cloud', description: 'فانيليا فاخرة كلاسيكية بقوام كريمي ناعم.', price: 7.50, image: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=600&q=80' }
         ];
 
+        // 1. التعامل مع طلب الاسم وكلمة السر
+        function submitName() {
+            const inputVal = document.getElementById('usernameInput').value.trim();
+            if (!inputVal) return;
+
+            if (inputVal === 'admin808') {
+                tempName = inputVal;
+                showPasswordPrompt();
+            } else {
+                completeLogin(inputVal, false);
+            }
+        }
+
+        function showPasswordPrompt() {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <h2>🔐 رمز المسؤول</h2>
+                <p>مرحباً admin808، أدخل كلمة السر للدخول:</p>
+                <input type="password" id="passInput" class="modal-input" placeholder="كلمة السر..." autofocus>
+                <button class="modal-btn" onclick="verifyPassword()">تأكيد</button>
+            `;
+        }
+
+        function verifyPassword() {
+            const passVal = document.getElementById('passInput').value;
+            // التحقق من كلمة السر 88881111
+            if (passVal === '88881111') {
+                completeLogin('أهلاً الأدمن 👑', true);
+            } else {
+                alert('كلمة السر غير صحيحة!');
+            }
+        }
+
+        function completeLogin(name, adminStatus) {
+            isAdmin = adminStatus;
+            document.getElementById('nameModal').classList.add('hidden');
+            document.getElementById('userGreeting').textContent = `مرحباً، ${name}`;
+
+            if (isAdmin) {
+                document.getElementById('adminBadge').style.display = 'flex';
+                document.getElementById('adminPanel').style.display = 'block';
+            }
+            
+            fetchProducts();
+        }
+
+        // 2. جلب وتحديث المنتجات
         async function fetchProducts() {
             const gridContainer = document.getElementById('product-grid');
             let products = [];
@@ -259,12 +461,54 @@
                             <span class="product-price">$${parseFloat(prod.price).toFixed(2)}</span>
                             <a href="https://wa.me/96872420073?text=${encodeURIComponent('أود طلب: ' + prod.name)}" target="_blank" class="order-btn">طلب واتساب</a>
                         </div>
+                        ${isAdmin ? `
+                            <div class="admin-actions" style="display:flex;">
+                                <button class="btn-edit-item" onclick="editProduct(${prod.id}, '${prod.name}', ${prod.price})">تعديل</button>
+                                <button class="btn-delete-item" onclick="deleteProduct(${prod.id})">حذف</button>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `).join('');
         }
 
-        document.addEventListener('DOMContentLoaded', fetchProducts);
+        // 3. خيارات الأدمن للإضافة والتعديل والحذف
+        async function addNewProduct() {
+            const name = document.getElementById('newProdName').value;
+            const price = parseFloat(document.getElementById('newProdPrice').value);
+            const description = document.getElementById('newProdDesc').value;
+            const image = document.getElementById('newProdImg').value;
+
+            if (!name || !price || !image) {
+                alert('يرجى ملء الاسم والسعر ورابط الصورة');
+                return;
+            }
+
+            const { error } = await supabase.from('products').insert([{ name, price, description, image }]);
+            if (error) alert('خطأ في الإضافة: ' + error.message);
+            else {
+                alert('تمت إضافة المنتج بنجاح!');
+                fetchProducts();
+            }
+        }
+
+        async function editProduct(id, currentName, currentPrice) {
+            const newName = prompt('اسم المنتج الجديد:', currentName);
+            const newPrice = prompt('السعر الجديد:', currentPrice);
+            if (newName && newPrice) {
+                const { error } = await supabase.from('products').update({ name: newName, price: parseFloat(newPrice) }).eq('id', id);
+                if (error) alert('خطأ في التعديل: ' + error.message);
+                else fetchProducts();
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (confirm('هل ترغب بحذف هذا المنتج فعلاً؟')) {
+                const { error } = await supabase.from('products').delete().eq('id', id);
+                if (error) alert('خطأ في الحذف: ' + error.message);
+                else fetchProducts();
+            }
+        }
     </script>
 </body>
 </html>
